@@ -16,7 +16,7 @@ export class UserController {
 
     async createUser(@Body()
     userData: { username: string, password: string, email: string }): Promise<User> {
-        const newUser = await this.userService.createUser(userData.username, userData.password, userData.email);
+        const newUser = await this.userService.createUser(userData.username, userData.email);
         return newUser;
     }
     @ApiOperation({ summary: 'Get user by id' })

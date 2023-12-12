@@ -8,9 +8,6 @@ export class User {
     @Column()
     username: string;
 
-    @Column()
-    password: string;
-
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
     })
@@ -25,13 +22,17 @@ export class User {
     })
     email: string;
 
-    @Column()
+    @Column({
+        default: true
+    })
     isActive: boolean;
 
     @Column()
     hash: string
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     hashRt: string
 
 }

@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
-import { Post } from '@nestjs/common/decorators';
+import { Body, Post } from '@nestjs/common/decorators';
 import { AuthService } from './auth.service';
+import { authDto } from 'src/dtos/authDto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,8 +12,8 @@ export class AuthController {
     }
 
     @Post('/local/signup')
-    signUpLocal() {
-        this.authService.signUpLocal();
+    async signUpLocal(@Body() dto: authDto) {
+        return await this.authService.signUpLocal(dto);
     }
 
     @Post('/logout')
