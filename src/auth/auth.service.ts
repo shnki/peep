@@ -53,7 +53,23 @@ export class AuthService {
 
 
 
-    signInLocal() { }
+    async signInLocal(dto: authDto) {
+        const user = await this.userRepository.findOne({
+            where: {
+                username: dto.email
+            }
+        })
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const isPasswordValid = bcrypt.compare(dto.password, user.hash);
+        if (!isPasswordValid) {
+            throw new Error('Invalid password');
+        }
+        const tokens = await this.getTokens(user.id, user.email);
+        await this.upadateRtHash(user.id, tokens.refresh_token);
+        return tokens
+    }
     async signUpLocal(dto: authDto): Promise<Tokens> {
         const hash = await this.hashData(dto.password);
 

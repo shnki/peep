@@ -7,8 +7,8 @@ import { authDto } from 'src/dtos/authDto';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
     @Post('/local/signin')
-    signInLocal() {
-        this.authService.signInLocal();
+    async signInLocal(@Body() dto: authDto) {
+        return await this.authService.signInLocal(dto);
     }
 
     @Post('/local/signup')
