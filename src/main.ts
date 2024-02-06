@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const conifg = new DocumentBuilder().setTitle("PeeP").setDescription('Api for PEEP').setVersion('1.0').build()
 
@@ -13,6 +13,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
   app.useGlobalPipes(new ValidationPipe())
+
   await app.listen(3000);
 }
 bootstrap();

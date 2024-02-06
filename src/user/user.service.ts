@@ -20,7 +20,7 @@ export class UserService {
     }
     async findUserById(id: number): Promise<User | undefined> {
         const parsedId = parseInt(id.toString());
-        return this.userRepository.findOne({ where: { id: parsedId } });
+        return this.userRepository.findOne({ where: { id: parsedId }, select: ['id', 'username', 'email'] });
     }
 
     async deleteUser(id: number): Promise<void> {

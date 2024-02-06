@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
-import { rtStrategy, atStrategy } from 'src/stratregy';
+import { rtStrategy, atStrategy } from 'src/strategy';
 import { JwtModule } from '@nestjs/jwt';
 
 

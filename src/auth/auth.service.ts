@@ -5,7 +5,6 @@ import { authDto } from 'src/dtos/authDto';
 import { User } from '../user/user.entity';
 import { Tokens } from 'src/types';
 import { JwtService } from '@nestjs/jwt';
-
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -30,7 +29,7 @@ export class AuthService {
 
     async getTokens(userId: number, email: string): Promise<Tokens> {
         const jwtPayload = {
-            sub: userId,
+            id: userId,
             email: email,
         };
 
@@ -62,7 +61,7 @@ export class AuthService {
         if (!user) {
             throw new Error('User not found');
         }
-        const isPasswordValid = bcrypt.compare(dto.password, user.hash);
+        const isPasswordValid = await bcrypt.compare(dto.password, user.hash);
         if (!isPasswordValid) {
             throw new Error('Invalid password');
         }
@@ -90,7 +89,38 @@ export class AuthService {
             throw error;
         }
     }
-    logout() { }
-    refreshTokens() { }
+
+    async logout(id: number): Promise<boolean> {
+        this.userRepository.createQueryBuilder().update(User)
+            .set({
+                hashRt: null
+            })
+            .where({
+                id: id
+            })
+            .andWhere('hashRt IS NOT NULL')
+            .execute()
+        return true
+    }
+
+    async refreshTokens(userId: number, rt: string) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id: userId
+            }
+        })
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const isRtMatch = await bcrypt.compare(rt, user.hashRt);
+        if (!isRtMatch) {
+            throw new Error('Invalid refresh token');
+        }
+        const tokens = await this.getTokens(user.id, user.email);
+        await this.upadateRtHash(user.id, tokens.refresh_token);
+        return tokens;
+    }
 
 }

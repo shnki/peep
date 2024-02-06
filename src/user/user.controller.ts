@@ -22,8 +22,8 @@ export class UserController {
     @ApiOperation({ summary: 'Get user by id' })
     @ApiOkResponse({ description: 'User found', type: User })
     @ApiBadRequestResponse({ description: 'User not found' })
-    @Get()
-    async getUserById(@Query('id', ParseIntPipe) id: number): Promise<User> {
+    @Get(':id')
+    async getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
         const user = await this.userService.findUserById(id);
         if (!user) {
             throw new NotFoundException('User not found');
@@ -41,6 +41,8 @@ export class UserController {
         }
         return user;
     }
+
+
 
     @Delete(":id")
     async deletUser(@Query('id', ParseIntPipe) id: number): Promise<void> {
